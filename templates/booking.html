@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">Booking</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center text-uppercase">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Booking</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+</div>
+<!-- Navbar & Hero End -->
+<!-- Flash messages -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="container">
+            <div class="alert alert-success alert-dismissible fade show" role="alertn" id="flash-message">
+                <ul class="list-unstyled mb-0">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <script>
+            // Automatically remove the flash message after 5 seconds
+            setTimeout(function() {
+                var flashMessage = document.getElementById('flash-message');
+                if (flashMessage) {
+                    flashMessage.remove();
+                }
+            }, 5000);
+        </script>
+    {% endif %}
+{% endwith %}
+
+<!-- Reservation Start -->
+<div class="container-xxl py-5 px-0 wow fadeInUp" data-wow-delay="0.1s">
+<div class="row g-0">
+    <div class="col-md-6">
+        <div class="video">
+        </div>
+    </div>
+    <div class="col-md-6 bg-dark d-flex align-items-center">
+        <div class="p-5 wow fadeInUp" data-wow-delay="0.2s">
+            <h5 class="section-title ff-secondary text-start text-primary fw-normal">Reservation</h5>
+            <h1 class="text-white mb-4">Book A Table Online</h1>
+            <form method="post" action="/booking">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
+                            <label for="name">Your Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email">
+                            <label for="email">Your Email</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating date" id="date3" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" id="datetime" name="datetime" placeholder="Date & Time" data-target="#date3" data-toggle="datetimepicker" />
+                            <label for="datetime">Date & Time</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control datetimepicker-input" id="people" name="people" placeholder="No Of People" data-toggle="datetimepicker" />
+                            <label for="select1">No Of People</label>
+                          </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Special Request" id="message" name="message" style="height: 100px"></textarea>
+                            <label for="message">Special Request</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-primary w-100 py-3" type="submit">Book Now</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<!-- Reservation end -->
+
+
+
+
+{% endblock %}

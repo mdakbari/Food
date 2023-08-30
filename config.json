@@ -1,0 +1,8 @@
+{
+    "params":
+    {
+        "local_server" : "True",
+        "local_uri": "mysql://root:@localhost/tasteful",
+        "prod_uri": "mysql://root:@localhost/tasteful"
+    }
+}

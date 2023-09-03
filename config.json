@@ -3,6 +3,8 @@
     {
         "local_server" : "True",
         "local_uri": "mysql://root:@localhost/tasteful",
-        "prod_uri": "mysql://root:@localhost/tasteful"
+        "prod_uri": "mysql://root:@localhost/tasteful",
+        "admin_name": "manthan",
+        "admin_password": "12345678"
     }
 }

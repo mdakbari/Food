@@ -1,7 +1,10 @@
 from flask import render_template, request, flash, Blueprint
 from models import Booking,Contact , db
-
+import json
 main = Blueprint('main', __name__)
+
+with open('config.json', 'r') as c:
+    params = json.load(c)['params']
 
 @main.route('/')
 @main.route('/home')
@@ -46,3 +49,19 @@ def booking():
         flash('Booking is confirmed! Thank you for your reservation.', 'success')
         return render_template('booking.html')
     return render_template('booking.html')
+
+
+@main.route("/admin")
+def admin():
+  
+    return render_template("register.html")
+
+@main.route("/login", methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        uname = request.form.get('uname')
+        upassword = request.form.get('pass')
+
+        if uname==params['admin_name'] and upassword==params['admin_password']:
+            return render_template('admin.html')
+    return render_template("login.html")

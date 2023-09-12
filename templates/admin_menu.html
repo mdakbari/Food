@@ -1,0 +1,109 @@
+{% extends "admin_layout.html" %}
+{% block body %}
+
+<div class="main-panel">
+  <div class="content-wrapper">
+      <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Add Menu</h4>
+              <form class="forms-sample" action="/admin_menu" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="exampleInputName1">Food Name</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputName1">Price</label>
+                  <input type="text" class="form-control" id="price" name="price" placeholder="Price">
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label">Select a Menu:</label>
+                  <div class="col-sm-9">
+                    <select class="form-control" name="category">
+                      <option>Breakfast</option>
+                      <option>Launch</option>
+                      <option>Dinner</option>
+                    </select>
+                  </div>
+                </div>  
+                <div class="form-group">
+                  <label for="exampleTextarea1">Description</label>
+                  <textarea class="form-control" id="description" name="description" rows="4" placeholder="Description"></textarea>
+                </div>
+                <div class="form-group">
+                  <label>File upload</label>
+                  <input type="file" name="image"  id="image" class="file-upload-default">
+                  <div class="input-group col-xs-12">
+                    <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                    <span class="input-group-append">
+                      <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                    </span>
+                  </div>
+                </div>
+                      <button type="submit" class="btn btn-primary me-2">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row ">
+        <div class="col-12 grid-margin">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Food Menu</h4>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th> Food Name </th>
+                      <th> Price </th>
+                      <th> Category </th>
+                      <th> Description </th>
+                      <th> File Name </th>
+                      <th> Edit</th>
+                      <th> Delete </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for foods in food %}
+                    <tr>
+                      <td> {{ foods.name}} </td>
+                      <td> {{ foods.price }} </td>
+                      <td> {{ foods.category }} </td>
+                      <td> {{ foods.description}} </td>
+                      <td> {{ foods.image }} </td>
+                      <td>  <a class="nav-link" href="admin_contact">
+                        <span class="menu-icon">
+                          <i class="mdi mdi-tooltip-edit"></i>
+                        </span>
+                      </a> </td>
+                      <td>  <a class="nav-link" href="admin_contact">
+                        <span class="menu-icon">
+                          <i class="mdi mdi mdi-delete"></i>
+                        </span>
+                      </a> </td>
+                    </tr>
+                    {% endfor %}   
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.file-upload-browse').click(function() {
+        $('#image').click();
+    });
+});
+</script>
+
+{% endblock %}
+       

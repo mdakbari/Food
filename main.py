@@ -87,6 +87,7 @@ with open('config.json', 'r') as c:
     params = json.load(c)['params']
 local_server = True
 
+
 if local_server:
     app.config["SQLALCHEMY_DATABASE_URI"] = params['local_uri']
 else:

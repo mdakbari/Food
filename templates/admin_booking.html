@@ -18,6 +18,8 @@
                       <th> Time </th>
                       <th> People </th>
                       <th> Special Request </th>
+                      <th> Accept </th>
+                      <th> Reject </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -28,6 +30,17 @@
                       <td> {{ books.datetime }} </td>
                       <td> {{ books.people}} </td>
                       <td> {{ books.msg }} </td>
+                      <td>
+                        <a class="nav-link" href="/manage_booking/{{ books.sno }}/accept">
+                        <span class="menu-icon">
+                          <i class="mdi mdi mdi-check"></i>
+                        </span>
+                      </a> </td>
+                      <td>  <a class="nav-link" href="/manage_booking/{{ books.sno }}/reject">
+                        <span class="menu-icon">
+                          <i class="mdi mdi mdi-close"></i>
+                        </span>
+                      </a> </td>
                     </tr>
                     {% endfor %}   
                 </tbody>

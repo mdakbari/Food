@@ -1,12 +1,23 @@
-from flask import render_template, request, flash, Blueprint,session,redirect,Flask
-from models import Booking,Contact,Foods, Signup, db
+from flask import render_template, request, flash, Blueprint,session,redirect,Flask, url_for
+from models import Booking,Contact,Foods, db
 from werkzeug.utils import secure_filename
 import json
 import os
 import bcrypt
+import smtplib
+from email.message import EmailMessage
 
 app = Flask(__name__)
 main = Blueprint('main', __name__)
+
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 'manthan1120@gmail.com'
+app.config['MAIL_PASSWORD'] = 'urbn mgmc dmwh dwau'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+
 
 
 with open('config.json', 'r') as c:
@@ -59,7 +70,7 @@ def booking():
         confirm = Booking(name=name, email=email, datetime=datetime, people=people, msg=msg)
         db.session.add(confirm)
         db.session.commit()
-        flash('Booking is confirmed! Thank you for your reservation.', 'success')
+        flash('Thank you for booking with us! Please check your email for all the details of your reservations', 'success')
         return render_template('booking.html')
     return render_template('booking.html')
 
@@ -89,6 +100,46 @@ def admin_booking():
         return redirect("login.html")
     book = Booking.query.all()
     return render_template("admin_booking.html", book=book, params=params)
+
+# crete a route for booking if admin is accept the booking request than send mail to user
+def send_email(body, subject, receiver_email):
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['Subject'] = subject
+    msg['From'] = "manthan1120@gmail.com"
+    msg['To'] = receiver_email
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login("manthan1120@gmail.com", 'urbn mgmc dmwh dwau')
+            server.send_message(msg)
+    except Exception as e:
+        print(f"Error sending email: {e}")
+
+@main.route("/manage_booking/<int:sno>/<status>", methods=['GET'])
+def manage_booking(sno,status):
+    if 'user' not in session:
+        return redirect("login.html")
+
+    booking = Booking.query.get(sno)
+    
+    if booking:
+        if status == 'accept':
+            booking.status = 'Accepted'
+            email_subject = 'Booking Accepted'
+        elif status == 'reject':
+            email_subject = 'Booking Rejected'
+            db.session.delete(booking)  
+        db.session.commit()
+        
+        body = f"Your booking request has been {status}:\nDate: {booking.datetime} \nPeople: {booking.people}\nSpecial Request: {booking.msg}"
+
+        send_email(body, email_subject, booking.email)
+    
+        
+    return redirect(url_for('main.admin_booking'))
 
 @main.route("/admin_contact")
 def admin_contact():
@@ -164,3 +215,4 @@ def delete_menu(id):
 def logout():
     session.pop('user') 
     return redirect('login')  
+

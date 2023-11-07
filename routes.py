@@ -76,28 +76,35 @@ def booking():
 
 
 #  Admin Route
+
+
 @main.route("/login", methods=['GET','POST'])
 def login():
+    if 'user' in session:
+        return render_template('admin_layout.html', params=params)
+
     if request.method == 'POST':
         uname = request.form.get('uname')
         upassword = request.form.get('pass')
-        
+
         if uname==params['admin_name'] and upassword==params['admin_password']:
             session['user'] = uname
             return render_template('admin_layout.html', params=params)
 
         return render_template("login.html")
-    
+
     return render_template("login.html")
 
-@main.route("/admin")
-def admin():
-    return render_template("login.html")
+# @main.route("/admin")
+# def admin():
+#     return render_template("login.html")
+
 
 @main.route("/admin_booking")
+
 def admin_booking():
     if 'user' not in session:
-        return redirect("login.html")
+        return redirect("/login")
     book = Booking.query.all()
     return render_template("admin_booking.html", book=book, params=params)
 
@@ -121,30 +128,29 @@ def send_email(body, subject, receiver_email):
 @main.route("/manage_booking/<int:sno>/<status>", methods=['GET'])
 def manage_booking(sno,status):
     if 'user' not in session:
-        return redirect("login.html")
-
+        return redirect("/login")
     booking = Booking.query.get(sno)
-    
+
     if booking:
         if status == 'accept':
             booking.status = 'Accepted'
             email_subject = 'Booking Accepted'
         elif status == 'reject':
             email_subject = 'Booking Rejected'
-            db.session.delete(booking)  
+            db.session.delete(booking)
         db.session.commit()
-        
+
         body = f"Your booking request has been {status}:\nDate: {booking.datetime} \nPeople: {booking.people}\nSpecial Request: {booking.msg}"
 
         send_email(body, email_subject, booking.email)
-    
-        
+
+
     return redirect(url_for('main.admin_booking'))
 
 @main.route("/admin_contact")
 def admin_contact():
     if 'user' not in session:
-        return redirect("login.html")
+        return redirect("/login")
     contact = Contact.query.all()
     return render_template("admin_contact.html", contact=contact, params=params)
 
@@ -152,20 +158,20 @@ def admin_contact():
 def admin_menu():
     if 'user' not in session:
         return redirect("login.html")
-    
+
     if request.method == 'POST':
         name = request.form['name']
-        price = float(request.form['price'])  
+        price = float(request.form['price'])
         description = request.form['description']
         category = request.form['category']
-        image_file = request.files['image']  
+        image_file = request.files['image']
 
         if image_file:
             filename = secure_filename(image_file.filename)
             image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         else:
             filename = None
-     
+
         new_food = Foods(name=name, price=price, category=category, description=description, image=filename)
         db.session.add(new_food)
         db.session.commit()
@@ -205,14 +211,13 @@ def delete_menu(id):
     if 'user' not in session:
         return redirect("login.html")
     delete_menu = Foods.query.get(id)
-   
+
     db.session.delete(delete_menu)
     db.session.commit()
 
-    return redirect("/admin_menu")  
+    return redirect("/admin_menu")
 
 @main.route("/logout")
 def logout():
-    session.pop('user') 
-    return redirect('login')  
-
+    session.pop('user')
+    return redirect('login')
